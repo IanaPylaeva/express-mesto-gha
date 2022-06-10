@@ -10,8 +10,8 @@ module.exports.createUser = (req, res) => {
 
 module.exports.getAllUsers = (req, res) => {
   User.find({})
-      .then(users => res.send({ data: users }))
-      .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then(users => res.send({ data: users }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports.getUserId = (req, res) => {

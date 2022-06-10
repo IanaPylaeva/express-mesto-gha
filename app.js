@@ -1,6 +1,6 @@
 const express = require('express'); //подключаем express
 const mongoose = require('mongoose');
-const userRoute = require('.routes/user');
+const userRoute = require('./routes/user');
 
 const { PORT = 3000 } = process.env; //порт, на котором будет запуск express-сервера
 
