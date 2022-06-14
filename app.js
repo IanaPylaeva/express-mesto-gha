@@ -1,9 +1,9 @@
 const path = require('path');
 const bodyParser = require('body-parser');
-const express = require('express'); //подключаем express
+const express = require('express');//подключаем express
 const mongoose = require('mongoose');
 
-const { PORT = 3000 } = process.env; //порт, на котором будет запуск express-сервера
+const { PORT = 3000 } = process.env;//порт, на котором будет запуск express-сервера
 const app = express();
 const usersRoute = require('./routes/users');
 const cardsRoute = require('./routes/cards');
@@ -15,7 +15,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '62a3c17845a8e18b011de161' // _id созданного тестового пользователя
+    _id: '62a3c17845a8e18b011de161'//_id созданного тестового пользователя
   };
 
   next();
@@ -28,17 +28,3 @@ app.use(express.static(path.join(__dirname, 'public'))); // теперь кли�
 
 // Слушаем 3000 порт
 app.listen(PORT);
-
-/*
-
-_id
-62a3c17845a8e18b011de161
-name
-"Тестовый пользователь"
-about
-"Информация о себе"
-avatar
-"http://risovach.ru/upload/2014/06/mem/mne-kazhetsya-ili-frai-futurama_…"
-__v
-0
-*/
