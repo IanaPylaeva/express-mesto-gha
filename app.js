@@ -5,13 +5,24 @@ const mongoose = require('mongoose');
 
 const { PORT = 3000 } = process.env; //порт, на котором будет запуск express-сервера
 const app = express();
+const userRoute = require('./routes/user');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-const userRoute = require('./routes/user');
+
+
+app.use((req, res, next) => {
+  req.user = {
+    _id: '62a3c17845a8e18b011de161' // _id созданного тестового пользователя
+  };
+
+  next();
+});
+
+
 app.use(userRoute);
 
 app.use(express.static(path.join(__dirname, 'public'))); // теперь клиент имеет доступ только к публичным файлам
