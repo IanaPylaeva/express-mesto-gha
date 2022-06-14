@@ -28,10 +28,7 @@ app.use(userRoute);
 app.use(express.static(path.join(__dirname, 'public'))); // теперь клиент имеет доступ только к публичным файлам
 
 // Слушаем 3000 порт
-app.listen(PORT, () => {
-    // Если всё работает, консоль покажет, какой порт приложение слушает
-    console.log(`App listening on port ${PORT}`)
-})
+app.listen(PORT);
 
 /*
 
