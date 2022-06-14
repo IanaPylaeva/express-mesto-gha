@@ -5,14 +5,13 @@ const mongoose = require('mongoose');
 
 const { PORT = 3000 } = process.env; //порт, на котором будет запуск express-сервера
 const app = express();
-const userRoute = require('./routes/user');
+const usersRoute = require('./routes/users');
+const cardsRoute = require('./routes/cards');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
-
-
 
 app.use((req, res, next) => {
   req.user = {
@@ -22,8 +21,8 @@ app.use((req, res, next) => {
   next();
 });
 
-
-app.use(userRoute);
+app.use(usersRoute);
+app.use(cardsRoute);
 
 app.use(express.static(path.join(__dirname, 'public'))); // теперь клиент имеет доступ только к публичным файлам
 
