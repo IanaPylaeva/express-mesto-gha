@@ -1,79 +1,77 @@
 const User = require('../models/user');
-const { IncorrectDataError } = require('../Error/IncorrectDataError'); // 400 ошибка
-const { NotFoundError } = require('../Error/NotFoundError'); // 404 ошибка
 
 /* Создать пользователя */
-module.exports.createUser = async (req, res, next) => {
+module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
-  try {
-    const user = await User.create({ name, about, avatar });
-    res.status(200).send(user);
-  } catch (error) {
-    if (error.name === 'IncorrectDataError') {
-      next(new IncorrectDataError('Переданы некорректные данные'));
-    } else {
-      next(error);
-    }
-  }
+  User.create({ name, about, avatar })
+    .then((user) => res.status(200).send(user))
+    .catch((error) => {
+      if (error.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+        return;
+      }
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
 
 /* Получить всех пользователей */
-module.exports.getAllUsers = (req, res, next) => User.find({})
-  .then((users) => res.status(200).send({ data: users }))
-  .catch(next);
+module.exports.getAllUsers = (req, res) => {
+  User.find({})
+    .then((users) => res.status(200).send(users))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+}
 
 /* Получить о пользователе информацию */
-module.exports.getUserId = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.params._id);
-    if (!user) {
-      throw new NotFoundError('Пользователь по указанному _id не найден');
-    }
-    res.status(200).send({ data: user });
-  } catch (error) {
-    if (error.name === 'IncorrectDataError') {
-      next(new IncorrectDataError('Некорректный id пользователя'));
-    } else {
-      next(error);
-    }
-  }
+module.exports.getUserId = (req, res) => {
+  User.findById(req.params.userId)
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
+        return;
+      }
+      res.status(200).send(user);
+    })
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        res.status(404).send({ message: 'Некорректный id пользователя' });
+        return;
+      }
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
 
 /* Обновить информацию о пользователе */
-module.exports.updateUser = async (req, res, next) => {
-  const { _id } = req.user;
+module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
-  try {
-    const user = await User.findByIdAndUpdate(_id, { name, about });
-    if (!user) {
-      throw new NotFoundError('Пользователь по указанному _id не найден');
-    }
-    res.status(200).send({ data: user });
-  } catch (error) {
-    if (error.name === 'IncorrectDataError') {
-      next(new IncorrectDataError('Некорректныe данные пользователя'));
-    } else {
-      next(error);
-    }
-  }
+  User.findByIdAndUpdate(
+    req.user._id, { name, about }, {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+    })
+      .then((user) => res.status(200).send(user))
+      .catch((error) => {
+        if (error.name === 'ValidationError') {
+          res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+          return;
+        }
+        res.status(500).send({ message: 'Произошла ошибка' });
+      });
 };
 
 /* Обновить аватар пользователя */
-module.exports.updateAvatar = (req, res, next) => {
-  const { _id } = req.user;
+module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(_id, { avatar })
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь по указанному _id не найден');
-      }
-      res.status(200).send({ data: user });
+  User.findByIdAndUpdate(
+    req.user._id, { avatar }, {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
     })
+    .then((user) => res.status(200).send(user))
     .catch((error) => {
-      if (error.name === 'IncorrectDataError') {
-        next(new IncorrectDataError('Некорректный id пользователя'));
-      } else {
-        next(error);
+      if (error.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара' });
+        return;
       }
+      res.status(500).send({ message: 'Произошла ошибка' });
     });
 };

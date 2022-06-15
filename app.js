@@ -1,18 +1,13 @@
-const path = require('path');
-const bodyParser = require('body-parser');
 const express = require('express');// подключаем express
-const mongoose = require('mongoose');
-
-const { PORT = 3000 } = process.env;// порт, на котором будет запуск express-сервера
 const app = express();
-const usersRoute = require('./routes/users');
-const cardsRoute = require('./routes/cards');
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const PORT = 3000;
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   req.user = {
     _id: '62a3c17845a8e18b011de161', // _id созданного тестового пользователя
@@ -20,11 +15,12 @@ app.use((req, res, next) => {
 
   next();
 });
+app.use('/', require('./routes/users'));
+app.use('/', require('./routes/cards'));
 
-app.use(usersRoute);
-app.use(cardsRoute);
-
-app.use(express.static(path.join(__dirname, 'public'))); // теперь клиент имеет доступ только к публичным файлам
+app.use('*', (req, res) => {
+  res.status(400).send({ message: 'Страницы не существует' });
+});
 
 // Слушаем 3000 порт
 app.listen(PORT);

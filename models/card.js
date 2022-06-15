@@ -16,11 +16,13 @@ const cardSchema = new mongoose.Schema({
     ref: 'user', // ссылка на модель автора карточки
     required: true, // обязательное поле
   },
-  likes: {
+  likes: [
+    {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user', // ссылка на модель автора карточки
     default: [], // обязательное поле
-  },
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
