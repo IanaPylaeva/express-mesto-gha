@@ -1,7 +1,9 @@
-const express = require('express');// подключаем express
+const express = require('express');
+// подключаем express
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+
 const PORT = 3000;
 
 mongoose.connect('mongodb://localhost:27017/mestodb');

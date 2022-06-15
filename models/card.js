@@ -18,9 +18,9 @@ const cardSchema = new mongoose.Schema({
   },
   likes: [
     {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user', // ссылка на модель автора карточки
-    default: [], // обязательное поле
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user', // ссылка на модель автора карточки
+      default: [], // обязательное поле
     },
   ],
   createdAt: {
