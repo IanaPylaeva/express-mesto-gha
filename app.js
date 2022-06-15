@@ -23,7 +23,7 @@ app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
 
 app.use('*', (req, res) => {
-  res.status(400).send({ message: 'Страницы не существует' });
+  res.status(404).send({ message: 'Страницы не существует' });
 });
 
 // Слушаем 3000 порт
