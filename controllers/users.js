@@ -118,7 +118,7 @@ module.exports.login = (req, res) => {
 };
 
 /* Получение информации о пользователе */
-module.exports.getUserId = (req, res) => {
+module.exports.getUserInfo = (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
