@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
 
+const helmet = require('helmet');
+
 const { PORT = 3000 } = process.env;
 
 const { login, createUser } = require('./controllers/users');
@@ -14,6 +16,7 @@ const auth = require('./middlewares/auth');
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
