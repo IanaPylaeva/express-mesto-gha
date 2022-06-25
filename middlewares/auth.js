@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-module.exports = (req, res, next) => {
-  // достаём авторизационный заголовок
+module.exports = (req, res, next) => { // достаём авторизационный заголовок
   const { authorization } = req.headers;
 
   // убеждаемся, что он есть или начинается с Bearer
@@ -25,5 +24,6 @@ module.exports = (req, res, next) => {
   }
 
   req.user = payload; // мидлвэр добавляет пейлоуд токена в объект запроса
-  next(); // пропускаем запрос дальше
+
+  return next(); // пропускаем запрос дальше
 };
