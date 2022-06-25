@@ -10,6 +10,8 @@ const { PORT = 3000 } = process.env;
 
 const { login, createUser } = require('./controllers/users');
 
+const auth = require('./middlewares/auth');
+
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(bodyParser.json());
@@ -27,6 +29,8 @@ app.use((req, res, next) => {
 
 app.post('/signin', login);
 app.post('/signup', createUser);
+
+app.use(auth);
 
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));

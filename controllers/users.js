@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const jwt = require('jsonwebtoken'); // импортируем модуль jsonwebtoken
 const User = require('../models/user');
 
-
 /* Создать пользователя */
 module.exports.createUser = (req, res) => {
   const {
@@ -90,10 +89,11 @@ module.exports.updateAvatar = (req, res) => {
     });
 };
 
+/* Получает из запроса почту и пароль и проверяет их */
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({ email })
+  User.findOne({ email }).select('+password') // в случае аутентификации хеш пароля нужен
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
@@ -114,5 +114,24 @@ module.exports.login = (req, res) => {
       res
         .status(401)
         .send({ message: err.message });
+    });
+};
+
+/* Получение информации о пользователе */
+module.exports.getUserId = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
+        return;
+      }
+      res.status(200).send(user);
+    })
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректный id пользователя' });
+        return;
+      }
+      res.status(500).send({ message: 'Произошла ошибка' });
     });
 };

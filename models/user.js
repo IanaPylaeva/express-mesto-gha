@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
     type: String, // это строка
     required: true, // обязательное поле
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png', // по умолчанию
+    validate: validator.isURL,
   },
   email: {
     type: String, // это строка
@@ -33,6 +34,7 @@ const userSchema = new mongoose.Schema({
     required: true, // обязательное поле
     unique: true, // уникальность
     minlength: 8, // минимальная длина  — 8 символов
+    select: false, // API не возвращает хеш пароля
   },
 });
 
