@@ -85,7 +85,7 @@ module.exports.updateAvatar = (req, res, next) => {
       res.status(200).send({ avatar });
     })
     .catch((error) => {
-      if (error.name === 'ValidationError') {
+      if (error.name === 'CastError') {
         next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
       }
       return next(error);
