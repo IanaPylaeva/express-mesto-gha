@@ -47,8 +47,7 @@ module.exports.getUserId = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь по указанному _id не найден');
-      }
-      res.status(200).send(user);
+      } res.status(200).send(user);
     })
     .catch((error) => {
       if (error.name === 'CastError') {
@@ -65,7 +64,9 @@ module.exports.updateUser = (req, res, next) => {
     new: true, // обработчик then получит на вход обновлённую запись
     runValidators: true, // данные будут валидированы перед изменением
   })
-    .then(() => res.status(200).send({ name, about }))
+    .then(() => {
+      res.status(200).send({ name, about });
+    })
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
@@ -101,7 +102,6 @@ module.exports.login = (req, res) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
       }
-
       // сравниваем переданный пароль и хеш из базы
       return Promise.all([bcrypt.compare(password, user.password), user]);
     })
@@ -130,7 +130,7 @@ module.exports.getUserInfo = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь по указанному _id не найден');
       }
-      return res.send({ data: user });
+      return res.status(200).send({ data: user });
     })
     .catch((error) => {
       if (error.name === 'ValidationError') {

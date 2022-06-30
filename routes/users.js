@@ -10,12 +10,12 @@ const {
 } = require('../controllers/users');
 
 router.get('/users', getAllUsers); // возвращает всех пользователей
+router.get('/users/me', getUserInfo); // возвращает информацию о текущем пользователе
 router.get('/users/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().length(24).hex().required(),
   }),
 }), getUserId); // возвращает пользователя по _id
-router.get('/users/me', getUserInfo); // возвращает информацию о текущем пользователе
 router.patch('/users/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
