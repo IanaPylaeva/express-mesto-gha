@@ -1,6 +1,6 @@
 const Card = require('../models/card');
-const ValidationError = require('../errors/validation-error');
-const NotFoundError = require('../errors/not-found-error');
+const ValidationError = require('../errors/validation-error'); // код 400
+const NotFoundError = require('../errors/not-found-error'); // код 404
 
 /* Получить все карточки */
 module.exports.getAllCards = (req, res, next) => {

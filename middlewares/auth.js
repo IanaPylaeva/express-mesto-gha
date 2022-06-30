@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const AuthorizationError = require('../errors/authorization-error');
+const AuthorizationError = require('../errors/authorization-error'); // код 401
 
 module.exports = (req, res, next) => { // достаём авторизационный заголовок
   const { authorization } = req.headers;
