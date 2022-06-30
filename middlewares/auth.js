@@ -14,8 +14,7 @@ module.exports = (req, res, next) => { // достаём авторизацио�
   let payload;
 
   try {
-    // попытаемся верифицировать токен
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwt.verify(token, 'some-secret-key'); // попытаемся верифицировать токен
   } catch (err) {
     // отправим ошибку, если не получилось
     return res
