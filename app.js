@@ -10,11 +10,13 @@ const helmet = require('helmet');
 
 const { PORT = 3000 } = process.env;
 
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 
 const auth = require('./middlewares/auth');
 
 const { login, createUser } = require('./controllers/users');
+
+const NotFoundError = require('./errors/not-found-error');
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
@@ -41,11 +43,19 @@ app.post('/signup', celebrate({
 
 app.use(auth);
 
-app.use('/', require('./routes/users'));
-app.use('/', require('./routes/cards'));
+app.use('/', auth, require('./routes/users'));
+app.use('/', auth, require('./routes/cards'));
 
-app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Страницы не существует' });
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Страницы не существует'));
+});
+
+app.use(errors());
+
+app.use((error, req, res, next) => {
+  const { statusCode = 500, message } = error;
+  res.status(statusCode).send({ message: statusCode === 500 ? 'Ошибка сервера' : message });
+  next();
 });
 
 // Слушаем 3000 порт
