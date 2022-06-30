@@ -85,7 +85,7 @@ module.exports.updateAvatar = (req, res, next) => {
       res.status(200).send({ avatar });
     })
     .catch((error) => {
-      if (error.name === 'CastError') {
+      if (error.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
       }
       return next(error);
@@ -133,7 +133,7 @@ module.exports.getUserInfo = (req, res, next) => {
       return res.send({ data: user });
     })
     .catch((error) => {
-      if (error.name === 'CastError') {
+      if (error.name === 'ValidationError') {
         return next(new ValidationError('Некорректный id пользователя'));
       }
       return next(error);
