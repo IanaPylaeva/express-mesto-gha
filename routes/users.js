@@ -16,7 +16,6 @@ router.get('/users/:userId', celebrate({
   }),
 }), getUserId); // возвращает пользователя по _id
 router.get('/users/me', getUserInfo); // возвращает информацию о текущем пользователе
-/*router.post('/users', createUser); // создаёт пользователя */
 router.patch('/users/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -25,7 +24,7 @@ router.patch('/users/me', celebrate({
 }), updateUser); // обновляет профиль
 router.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(/https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-._~:/?#[]@!$&'()*+,;=]{2,}#?$/),
+    avatar: Joi.string().required().pattern(/^https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-._~:/?#[\]@!$&'()*+,;=]{2,}#?$/),
   }),
 }), updateAvatar); // обновляет аватар
 

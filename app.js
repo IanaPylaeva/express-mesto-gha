@@ -10,9 +10,11 @@ const helmet = require('helmet');
 
 const { PORT = 3000 } = process.env;
 
-const { login, createUser } = require('./controllers/users');
+const { celebrate, Joi } = require('celebrate');
 
 const auth = require('./middlewares/auth');
+
+const { login, createUser } = require('./controllers/users');
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
@@ -20,18 +22,22 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-/*
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62a3c17845a8e18b011de161', // _id созданного тестового пользователя
-  };
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
 
-  next();
-});
-*/
-
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(/^https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-._~:/?#[\]@!$&'()*+,;=]{2,}#?$/),
+  }),
+}), createUser);
 
 app.use(auth);
 

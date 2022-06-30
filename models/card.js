@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'); // Зададим схему для карточки через Mongoose
+const validator = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: { // у карточки есть имя — опишем требования к имени в схеме:
