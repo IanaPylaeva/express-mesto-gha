@@ -81,7 +81,9 @@ module.exports.updateAvatar = (req, res, next) => {
     new: true, // обработчик then получит на вход обновлённую запись
     runValidators: true, // данные будут валидированы перед изменением
   })
-    .then(() => res.status(200).send({ avatar }))
+    .then(() => {
+      res.status(200).send({ avatar });
+    })
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
