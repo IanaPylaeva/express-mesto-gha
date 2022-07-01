@@ -26,7 +26,7 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные при создании пользователя'));
+        return next(new ValidationError('Переданы некорректные данные при создании пользователя'));
       } if (error.code === 11000) {
         return res.status(409).send({ message: 'Email уже существует' });
       }
@@ -51,7 +51,7 @@ module.exports.getUserId = (req, res, next) => {
     })
     .catch((error) => {
       if (error.name === 'CastError') {
-        next(new NotFoundError('Некорректный id пользователя'));
+        return next(new NotFoundError('Некорректный id пользователя'));
       }
       return next(error);
     });
